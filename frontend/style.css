@@ -1,666 +1,407 @@
-:root {
-  --bg: radial-gradient(circle at top left, #0b1620, #02040a 55%, #000000);
-  --bg-solid: #050910;
-  --bg-elevated: rgba(15, 25, 35, 0.9);
-  --bg-glass: rgba(15, 25, 35, 0.72);
-  --accent: #00f5a0;
-  --accent-soft: rgba(0, 245, 160, 0.16);
-  --accent-strong: #00d6b3;
-  --accent-gradient: linear-gradient(135deg, #00f5a0, #00d6b3, #00c0ff);
-  --text: #f5f7fb;
-  --text-muted: #8696a0;
-  --bubble-out: #005c4b;
-  --bubble-in: #202c33;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.75);
-  --status-good: #00f59c;
-  --status-bad: #ff4b5c;
-  --status-warn: #ffb02e;
-}
-
-body.light {
-  --bg: radial-gradient(circle at top left, #f3f4fa, #dde3f0);
-  --bg-solid: #f3f4fa;
-  --bg-elevated: rgba(255, 255, 255, 0.96);
-  --bg-glass: rgba(255, 255, 255, 0.9);
-  --accent: #00897b;
-  --accent-soft: rgba(0, 137, 123, 0.12);
-  --accent-strong: #00796b;
-  --accent-gradient: linear-gradient(135deg, #00bfa5, #00897b, #00acc1);
-  --text: #141c24;
-  --text-muted: #5f6e7b;
-  --bubble-out: #d9fdd3;
-  --bubble-in: #ffffff;
-  --border-subtle: rgba(0, 0, 0, 0.08);
-  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.08);
-}
-
-/* Reset & base */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text',
-    'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;    /* key: vertical stack */
-  align-items: stretch;      /* no vertical centering */
-  justify-content: flex-start;
-  transition: background 0.4s ease, color 0.3s ease;
-}
-
-.app {
-  flex: 1;
-  max-width: 1120px;
-  width: 100%;
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  padding: 16px;
-  margin: 0 auto;
-  min-height: 100vh;         /* key: full viewport height for app */
-}
-
-/* Screens */
-
-.screen {
-  display: none;
-  width: 100%;
-  max-width: 1120px;
-}
-
-.screen.active {
-  display: flex;
-}
-
-/* Landing layout */
-
-#landing-screen {
-  align-items: center;
-  justify-content: center;
-}
-
-.landing-layout {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 24px;
-  align-items: center;
-  width: 100%;
-}
-
-.landing-hero {
-  padding: 24px;
-}
-
-.logo-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.logo-pill.small {
-  padding: 4px 10px;
-  box-shadow: none;
-}
-
-.logo-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: var(--accent-gradient);
-  box-shadow: 0 0 16px rgba(0, 245, 160, 0.5);
-}
-
-.logo-text {
-  font-size: 0.85rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.landing-hero h1 {
-  margin: 14px 0 6px;
-  font-size: clamp(2rem, 3vw, 2.6rem);
-  letter-spacing: -0.03em;
-}
-
-.subtitle {
-  margin: 0;
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  max-width: 420px;
-}
-
-.feature-list {
-  list-style: none;
-  padding: 0;
-  margin: 18px 0 0;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.feature-list li {
-  margin-bottom: 6px;
-  position: relative;
-  padding-left: 18px;
-}
-
-.feature-list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 7px;
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--accent);
-}
-
-/* Glass card */
-
-.glass-card {
-  background: var(--bg-glass);
-  border-radius: 20px;
-  padding: 22px 18px 16px;
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.card {
-  width: 100%;
-  max-width: 440px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  animation: fadeInUp 0.55s ease;
-}
-
-.card h2 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.card-caption {
-  margin: 0;
-  font-size: 0.88rem;
-  color: var(--text-muted);
-}
-
-/* Inputs & buttons */
-
-label {
-  margin-top: 8px;
-  font-size: 0.84rem;
-  color: var(--text-muted);
-}
-
-.room-input-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.room-input-row input {
-  flex: 1;
-}
-
-input[type='text'] {
-  background: rgba(8, 15, 24, 0.9);
-  border: 1px solid var(--border-subtle);
-  color: var(--text);
-  padding: 10px 12px;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.18s ease, background 0.18s ease,
-    box-shadow 0.18s ease, transform 0.06s ease;
-}
-
-body.light input[type='text'] {
-  background: rgba(255, 255, 255, 0.98);
-}
-
-input[type='text']:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-soft);
-  transform: translateY(-1px);
-}
-
-button {
-  border: none;
-  border-radius: 999px;
-  padding: 9px 14px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.02);
-  color: var(--text);
-  transition: background 0.18s ease, transform 0.06s ease,
-    box-shadow 0.18s ease, border-color 0.18s ease;
-}
-
-button.primary {
-  background: var(--accent-gradient);
-  color: #0a1015;
-  font-weight: 600;
-  margin-top: 10px;
-  box-shadow: 0 10px 30px rgba(0, 245, 160, 0.4);
-}
-
-button.secondary {
-  background: transparent;
-  border: 1px solid var(--border-subtle);
-  margin-top: 8px;
-}
-
-button.ghost-btn {
-  background: transparent;
-  border: 1px solid transparent;
-  padding-inline: 10px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-button.icon-btn {
-  background: transparent;
-  border-radius: 999px;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.88rem;
-}
-
-button.primary-icon {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding-inline: 16px;
-}
-
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-button.primary:hover {
-  box-shadow: 0 16px 34px rgba(0, 245, 160, 0.45);
-}
-
-button:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-.hint {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-top: 8px;
-}
-
-.footer {
-  margin-top: 6px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* Chat screen */
-
-#chat-screen {
-  display: flex;              /* key: column flex container */
-  flex-direction: column;
-  background: var(--bg-solid);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: var(--shadow-soft);
-  animation: fadeInUp 0.55s ease;
-}
-
-/* Chat header */
-
-.chat-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.glass-header {
-  background: linear-gradient(
-      120deg,
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.1)
-    ),
-    rgba(7, 14, 22, 0.92);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-.chat-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.chat-brand-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.brand-subtitle {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.status {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.status-dot {
-  position: relative;
-  padding-left: 16px;
-}
-
-.status-dot::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--status-warn);
-  transform: translateY(-50%);
-}
-
-.status-dot.warning::before {
-  background: var(--status-warn);
-}
-
-.status-dot.connected::before {
-  background: var(--status-good);
-}
-
-.status-dot.disconnected::before {
-  background: var(--status-bad);
-}
-
-.header-actions {
-  display: flex;
-  gap: 6px;
-}
-
-/* Chat main */
-
-.chat-main {
-  flex: 1;                     /* grows to fill */
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(
-    145deg,
-    #050910 0%,
-    #08121e 35%,
-    #050910 100%
+// Basic state
+let socket = null;
+let currentRoomCode = null;
+let senderId = null;
+let typingTimeoutId = null;
+
+// Elements
+const landingScreen = document.getElementById('landing-screen');
+const chatScreen = document.getElementById('chat-screen');
+const roomCodeInput = document.getElementById('room-code-input');
+const joinRoomBtn = document.getElementById('join-room-btn');
+const generateCodeBtn = document.getElementById('generate-code-btn');
+const copyRoomCodeBtn = document.getElementById('copy-room-code-btn');
+const currentRoomCodeLabel = document.getElementById('current-room-code');
+const connectionStatus = document.getElementById('connection-status');
+const messagesContainer = document.getElementById('messages');
+const typingIndicator = document.getElementById('typing-indicator');
+const messageForm = document.getElementById('message-form');
+const messageInput = document.getElementById('message-input');
+const sendBtn = document.getElementById('send-btn');
+const toggleThemeLanding = document.getElementById('toggle-theme-landing');
+const toggleThemeChat = document.getElementById('toggle-theme-chat');
+const leaveRoomBtn = document.getElementById('leave-room-btn');
+const messageSound = document.getElementById('message-sound');
+
+// New elements for media uploads
+const attachBtn = document.getElementById('attach-btn');
+const fileInput = document.getElementById('file-input');
+
+// Utilities
+function generateSenderId() {
+  return (
+    'user-' +
+    Math.random().toString(36).substring(2, 8) +
+    '-' +
+    Date.now().toString(36)
   );
 }
 
-.messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px 12px 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+function sanitizeRoomCode(code) {
+  return String(code || '')
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9_-]/g, '')
+    .slice(0, 32);
 }
 
-/* Message bubbles */
-
-.message-row {
-  display: flex;
+function formatTime(dateStrOrDate) {
+  const d =
+    dateStrOrDate instanceof Date ? dateStrOrDate : new Date(dateStrOrDate);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-.message-row.me {
-  justify-content: flex-end;
+function scrollToBottom() {
+  requestAnimationFrame(() => {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  });
 }
 
-.message-row.them {
-  justify-content: flex-start;
-}
-
-.message-bubble {
-  max-width: 72%;
-  padding: 6px 8px 4px;
-  border-radius: 18px;
-  font-size: 0.86rem;
-  line-height: 1.4;
-  position: relative;
-  word-wrap: break-word;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55);
-  animation: messageIn 0.18s ease;
-}
-
-.message-row.me .message-bubble {
-  background: var(--accent-gradient);
-  color: #061018;
-  border-bottom-right-radius: 4px;
-}
-
-.message-row.them .message-bubble {
-  background: rgba(18, 28, 38, 0.96);
-  color: var(--text);
-  border-bottom-left-radius: 4px;
-}
-
-.message-meta {
-  display: flex;
-  justify-content: flex-end;
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.72);
-  margin-top: 2px;
-}
-
-.message-row.them .message-meta {
-  color: var(--text-muted);
-}
-
-.system-message {
-  text-align: center;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  padding: 4px 0;
-  opacity: 0.8;
-}
-
-/* Media inside bubbles */
-
-.message-media {
-  display: block;
-  margin-bottom: 4px;
-  border-radius: 12px;
-  max-width: 220px;
-  max-height: 200px;
-  object-fit: cover;
-  overflow: hidden;
-}
-
-.message-media.video {
-  max-width: 260px;
-  max-height: 220px;
-}
-
-/* Typing indicator */
-
-.typing-indicator {
-  padding: 4px 14px 10px;
-  font-size: 0.78rem;
-  color: var(--accent);
-  opacity: 1;
-  transition: opacity 0.18s ease, height 0.18s ease, padding 0.18s ease;
-}
-
-.typing-indicator.hidden {
-  opacity: 0;
-  height: 0;
-  padding: 0 14px;
-  overflow: hidden;
-}
-
-/* Chat footer */
-
-.chat-footer {
-  border-top: 1px solid var(--border-subtle);
-  flex-shrink: 0;              /* key: keep footer visible, no shrink */
-}
-
-.glass-footer {
-  background: rgba(9, 16, 26, 0.96);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  padding: 6px 8px;
-}
-
-#message-form {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-#message-input {
-  flex: 1;
-  border-radius: 999px;
-  border: 1px solid var(--border-subtle);
-  background: rgba(6, 12, 20, 0.98);
-  color: var(--text);
-  padding: 10px 12px;
-  font-size: 0.9rem;
-}
-
-body.light #message-input {
-  background: rgba(255, 255, 255, 0.98);
-}
-
-#send-btn {
-  min-width: 70px;
-  border-radius: 999px;
-}
-
-/* Animations */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
+// Theme
+function setTheme(theme) {
+  if (theme === 'light') {
+    document.body.classList.add('light');
+  } else {
+    document.body.classList.remove('light');
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  localStorage.setItem('theme', theme);
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.contains('light');
+  setTheme(isLight ? 'dark' : 'light');
+}
+
+// Sound
+function playMessageSound() {
+  try {
+    messageSound.currentTime = 0;
+    messageSound.play().catch(() => {});
+  } catch (e) {}
+}
+
+// DOM rendering
+function appendSystemMessage(text) {
+  const div = document.createElement('div');
+  div.className = 'system-message';
+  div.textContent = text;
+  messagesContainer.appendChild(div);
+  scrollToBottom();
+}
+
+function appendChatMessage({
+  senderId: sId,
+  message,
+  timestamp,
+  type,
+  mediaUrl,
+  mediaType
+}) {
+  const isMe = sId === senderId;
+
+  const row = document.createElement('div');
+  row.className = 'message-row ' + (isMe ? 'me' : 'them');
+
+  const bubble = document.createElement('div');
+  bubble.className = 'message-bubble';
+
+  // Optional media preview
+  if (mediaUrl && mediaType) {
+    if (mediaType.startsWith('image/')) {
+      const img = document.createElement('img');
+      img.src = mediaUrl;
+      img.alt = 'Image';
+      img.className = 'message-media image';
+      bubble.appendChild(img);
+    } else if (mediaType.startsWith('video/')) {
+      const video = document.createElement('video');
+      video.src = mediaUrl;
+      video.controls = true;
+      video.className = 'message-media video';
+      bubble.appendChild(video);
+    }
+  }
+
+  const hasText = message && message.trim().length > 0;
+  if (hasText) {
+    const textSpan = document.createElement('span');
+    textSpan.textContent = message;
+    bubble.appendChild(textSpan);
+  }
+
+  const meta = document.createElement('div');
+  meta.className = 'message-meta';
+  meta.textContent = formatTime(timestamp);
+  bubble.appendChild(meta);
+
+  row.appendChild(bubble);
+  messagesContainer.appendChild(row);
+  scrollToBottom();
+
+  if (!isMe && socket && socket.connected) {
+    playMessageSound();
   }
 }
 
-@keyframes messageIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Scrollbar */
-
-.messages::-webkit-scrollbar {
-  width: 8px;
-}
-
-.messages::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-}
-
-/* Responsive */
-
-@media (max-width: 800px) {
-  .landing-layout {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .landing-hero {
-    padding: 16px 8px 0;
-  }
-
-  .feature-list {
-    display: none;
-  }
-
-  .app {
-    padding: 8px;
-  }
-
-  #chat-screen {
-    border-radius: 14px;
+// Connection status helper
+function updateConnectionStatus(text, stateClass) {
+  if (!connectionStatus) return;
+  connectionStatus.textContent = text;
+  connectionStatus.classList.remove('connected', 'disconnected', 'warning');
+  if (stateClass) {
+    connectionStatus.classList.add(stateClass);
   }
 }
 
-@media (max-width: 600px) {
-  .app {
-    padding: 0;
+// Socket.IO setup
+function initSocket() {
+  socket = io({
+    transports: ['websocket'],
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 1000
+  }); // Socket.IO automatically handles reconnection; options tune the delay and attempts.
+
+  socket.on('connect', () => {
+    updateConnectionStatus('Connected', 'connected');
+
+    if (currentRoomCode && senderId) {
+      socket.emit('joinRoom', {
+        roomCode: currentRoomCode,
+        senderId
+      });
+    }
+  });
+
+  socket.on('disconnect', () => {
+    updateConnectionStatus('Disconnected. Reconnecting...', 'disconnected');
+  });
+
+  socket.on('reconnect_attempt', () => {
+    updateConnectionStatus('Reconnecting...', 'warning');
+  });
+
+  socket.on('reconnect', () => {
+    updateConnectionStatus('Connected', 'connected');
+  });
+
+  socket.on('newMessage', (msg) => {
+    appendChatMessage(msg);
+  });
+
+  socket.on('systemMessage', (data) => {
+    if (data.type === 'join') {
+      appendSystemMessage('A user joined the room.');
+    } else if (data.type === 'leave') {
+      appendSystemMessage('A user left the room.');
+    }
+  });
+
+  socket.on('typing', ({ senderId: sId, isTyping }) => {
+    if (sId === senderId) return;
+    if (isTyping) {
+      typingIndicator.classList.remove('hidden');
+    } else {
+      typingIndicator.classList.add('hidden');
+    }
+  });
+}
+
+function joinRoom() {
+  const rawCode = roomCodeInput.value;
+  const code = sanitizeRoomCode(rawCode);
+
+  if (!code) {
+    roomCodeInput.focus();
+    return;
   }
 
-  #chat-screen,
-  .glass-card {
-    border-radius: 0;
+  currentRoomCode = code;
+  currentRoomCodeLabel.textContent = code;
+
+  landingScreen.classList.remove('active');
+  chatScreen.classList.add('active');
+
+  messagesContainer.innerHTML = '';
+  typingIndicator.classList.add('hidden');
+
+  // Load history
+  fetch(`/api/rooms/${encodeURIComponent(code)}/messages?limit=100`)
+    .then((res) => res.json())
+    .then((data) => {
+      (data.messages || []).forEach((m) => appendChatMessage(m));
+    })
+    .catch((err) => {
+      console.error('Error loading messages', err);
+    });
+
+  if (!socket) {
+    initSocket();
   }
 
-  .landing-hero {
-    display: none;
+  if (socket.connected) {
+    socket.emit('joinRoom', { roomCode: code, senderId });
+  } // else join will be re-sent on 'connect'
+}
+
+function leaveRoom() {
+  currentRoomCode = null;
+  messagesContainer.innerHTML = '';
+  typingIndicator.classList.add('hidden');
+
+  chatScreen.classList.remove('active');
+  landingScreen.classList.add('active');
+
+  updateConnectionStatus('Connecting...', 'warning');
+}
+
+// Typing events (debounced)
+function notifyTyping() {
+  if (!socket || !socket.connected || !currentRoomCode) return;
+
+  socket.emit('typing', {
+    roomCode: currentRoomCode,
+    senderId,
+    isTyping: true
+  });
+
+  if (typingTimeoutId) clearTimeout(typingTimeoutId);
+  typingTimeoutId = setTimeout(() => {
+    socket.emit('typing', {
+      roomCode: currentRoomCode,
+      senderId,
+      isTyping: false
+    });
+    typingTimeoutId = null;
+  }, 600);
+}
+
+// Media upload
+async function uploadMedia(file) {
+  if (!currentRoomCode || !file) return;
+
+  const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20MB
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    alert('File too large. Max 20MB.');
+    return;
   }
 
-  .glass-card {
-    max-width: 100%;
-    border-radius: 0;
-  }
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('senderId', senderId);
 
-  .messages {
-    padding-bottom: 8px;
+  try {
+    const res = await fetch(
+      `/api/rooms/${encodeURIComponent(currentRoomCode)}/upload`,
+      {
+        method: 'POST',
+        body: formData
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error('Upload failed', err);
+      alert(err.error || 'Upload failed');
+      return;
+    }
+
+    // Server emits newMessage via Socket.IO; we just clear the input.
+  } catch (e) {
+    console.error('Upload error', e);
+    alert('Upload failed. Please try again.');
+  } finally {
+    fileInput.value = '';
   }
 }
+
+// Event bindings
+joinRoomBtn.addEventListener('click', () => {
+  joinRoom();
+});
+
+generateCodeBtn.addEventListener('click', () => {
+  const code =
+    'ROOM-' +
+    Math.random().toString(36).substring(2, 6).toUpperCase() +
+    '-' +
+    Math.random().toString(36).substring(2, 4).toUpperCase();
+  roomCodeInput.value = code;
+});
+
+copyRoomCodeBtn.addEventListener('click', async () => {
+  const code = sanitizeRoomCode(roomCodeInput.value);
+  if (!code) return;
+  try {
+    await navigator.clipboard.writeText(code);
+    copyRoomCodeBtn.textContent = 'Copied!';
+    setTimeout(() => {
+      copyRoomCodeBtn.textContent = 'Copy Room Code';
+    }, 1200);
+  } catch (e) {
+    console.error('Clipboard error', e);
+  }
+});
+
+messageForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!socket || !socket.connected || !currentRoomCode) return;
+
+  const text = messageInput.value.trim();
+  if (!text) return;
+
+  socket.emit('sendMessage', {
+    roomCode: currentRoomCode,
+    senderId,
+    message: text
+  });
+
+  messageInput.value = '';
+  notifyTyping(); // will quickly send isTyping: false
+});
+
+messageInput.addEventListener('input', () => {
+  notifyTyping();
+});
+
+toggleThemeLanding.addEventListener('click', toggleTheme);
+toggleThemeChat.addEventListener('click', toggleTheme);
+
+leaveRoomBtn.addEventListener('click', () => {
+  leaveRoom();
+});
+
+// Attach button and file input
+attachBtn.addEventListener('click', () => {
+  if (!currentRoomCode) {
+    // Optional: force user to join first
+    roomCodeInput.focus();
+    return;
+  }
+  fileInput.click();
+});
+
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+  uploadMedia(file);
+});
+
+// Initial bootstrap
+(function bootstrap() {
+  // Sender ID
+  const cachedId = localStorage.getItem('senderId');
+  if (cachedId) {
+    senderId = cachedId;
+  } else {
+    senderId = generateSenderId();
+    localStorage.setItem('senderId', senderId);
+  }
+
+  // Theme
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  setTheme(savedTheme);
+
+  // Focus input
+  roomCodeInput.focus();
+})();
