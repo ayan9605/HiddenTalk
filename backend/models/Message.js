@@ -24,8 +24,9 @@ const messageSchema = new mongoose.Schema(
 
     // Optional per-message expiration time.
     // For media messages we’ll set this to now + 24h.
-    // MongoDB TTL index will delete the document when this time is reached.[web:68][web:71][web:84][web:87]
-    expiresAt: { type: Date, index: true }
+    // MongoDB TTL index will delete the document when this time is reached.
+    // (no inline index here to avoid duplicate index definition)
+    expiresAt: { type: Date }
   },
   { collection: 'messages' }
 );
@@ -34,7 +35,7 @@ const messageSchema = new mongoose.Schema(
 messageSchema.index({ roomCode: 1, timestamp: 1 });
 
 // TTL index: expire documents at the exact time in expiresAt
-// We use expireAfterSeconds: 0 so each document's expiresAt controls when it is removed.[web:71][web:84][web:87]
+// We use expireAfterSeconds: 0 so each document's expiresAt controls when it is removed.[web:68][web:71][web:84][web:87]
 messageSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model('Message', messageSchema);
