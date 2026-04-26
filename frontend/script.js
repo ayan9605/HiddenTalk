@@ -113,6 +113,16 @@ function appendChatMessage({ senderId: sId, message, timestamp }) {
   }
 }
 
+// Connection status helper
+function updateConnectionStatus(text, stateClass) {
+  if (!connectionStatus) return;
+  connectionStatus.textContent = text;
+  connectionStatus.classList.remove('connected', 'disconnected', 'warning');
+  if (stateClass) {
+    connectionStatus.classList.add(stateClass);
+  }
+}
+
 // Socket.IO setup
 function initSocket() {
   socket = io({
@@ -120,11 +130,10 @@ function initSocket() {
     reconnection: true,
     reconnectionAttempts: Infinity,
     reconnectionDelay: 1000
-  }); // Socket.IO automatically handles reconnection; options tune the delay and attempts.[web:7]
+  }); // Socket.IO automatically handles reconnection; options tune the delay and attempts.
 
   socket.on('connect', () => {
-    connectionStatus.textContent = 'Connected';
-    connectionStatus.style.color = '#00bfa5';
+    updateConnectionStatus('Connected', 'connected');
 
     if (currentRoomCode && senderId) {
       socket.emit('joinRoom', {
@@ -135,18 +144,15 @@ function initSocket() {
   });
 
   socket.on('disconnect', () => {
-    connectionStatus.textContent = 'Disconnected. Reconnecting...';
-    connectionStatus.style.color = '#ff4b5c';
+    updateConnectionStatus('Disconnected. Reconnecting...', 'disconnected');
   });
 
   socket.on('reconnect_attempt', () => {
-    connectionStatus.textContent = 'Reconnecting...';
-    connectionStatus.style.color = '#ffb02e';
+    updateConnectionStatus('Reconnecting...', 'warning');
   });
 
   socket.on('reconnect', () => {
-    connectionStatus.textContent = 'Connected';
-    connectionStatus.style.color = '#00bfa5';
+    updateConnectionStatus('Connected', 'connected');
   });
 
   socket.on('newMessage', (msg) => {
@@ -216,8 +222,7 @@ function leaveRoom() {
   chatScreen.classList.remove('active');
   landingScreen.classList.add('active');
 
-  connectionStatus.textContent = 'Connecting...';
-  connectionStatus.style.color = '#8696a0';
+  updateConnectionStatus('Connecting...', 'warning');
 }
 
 // Typing events (debounced)
@@ -262,7 +267,7 @@ copyRoomCodeBtn.addEventListener('click', async () => {
     await navigator.clipboard.writeText(code);
     copyRoomCodeBtn.textContent = 'Copied!';
     setTimeout(() => {
-      copyRoomCodeBtn.textContent = 'Copy Code';
+      copyRoomCodeBtn.textContent = 'Copy Room Code';
     }, 1200);
   } catch (e) {
     console.error('Clipboard error', e);
