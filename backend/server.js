@@ -9,10 +9,12 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
 
 import roomRoutes from './routes/roomRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 import initSocket from './socket/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +29,9 @@ const io = new SocketIOServer(server, {
     methods: ['GET', 'POST']
   }
 });
+
+// Expose io so routes (like upload) can emit socket events
+app.set('io', io);
 
 // Initialize Socket.IO handlers
 initSocket(io);
@@ -44,10 +49,18 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false
 });
-app.use(limiter); // apply to all REST routes[web:6][web:15]
+app.use(limiter); // apply to all REST routes
+
+// Static serving for uploaded media
+const uploadsPath = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+}
+app.use('/uploads', express.static(uploadsPath));
 
 // REST routes
 app.use('/api/rooms', roomRoutes);
+app.use('/api/rooms', uploadRoutes); // /:code/upload
 
 // Serve frontend (assuming ../frontend)
 const frontendPath = path.join(__dirname, '../frontend');
