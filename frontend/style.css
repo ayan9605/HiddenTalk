@@ -405,6 +405,10 @@ button:active {
   transform: translateY(-50%);
 }
 
+.status-dot.warning::before {
+  background: var(--status-warn);
+}
+
 .status-dot.connected::before {
   background: var(--status-good);
 }
