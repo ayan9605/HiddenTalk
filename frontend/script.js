@@ -386,6 +386,41 @@ messagesContainer.addEventListener('scroll', () => {
   autoScrollOnNewMessage = isAtBottom(messagesContainer);
 });
 
+// Click to open media (images fullscreen, videos toggle play/pause)
+messagesContainer.addEventListener('click', (e) => {
+  const video = e.target.closest('video.message-media');
+  const img = e.target.closest('img.message-media');
+
+  if (video) {
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+    return;
+  }
+
+  if (img) {
+    const overlay = document.createElement('div');
+    overlay.className = 'media-viewer-overlay';
+
+    const bigImg = document.createElement('img');
+    bigImg.src = img.src;
+    overlay.appendChild(bigImg);
+
+    const closeBtn = document.createElement('div');
+    closeBtn.className = 'media-viewer-overlay-close';
+    closeBtn.textContent = '✕';
+    overlay.appendChild(closeBtn);
+
+    overlay.addEventListener('click', () => {
+      overlay.remove();
+    });
+
+    document.body.appendChild(overlay);
+  }
+});
+
 toggleThemeLanding.addEventListener('click', toggleTheme);
 toggleThemeChat.addEventListener('click', toggleTheme);
 
