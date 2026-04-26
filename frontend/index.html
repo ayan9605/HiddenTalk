@@ -103,6 +103,20 @@
 
       <footer class="chat-footer glass-footer">
         <form id="message-form">
+          <button
+            id="attach-btn"
+            type="button"
+            class="icon-btn"
+            title="Attach photo or video"
+          >
+            📎
+          </button>
+          <input
+            id="file-input"
+            type="file"
+            accept="image/*,video/mp4,video/webm"
+            hidden
+          />
           <input
             id="message-input"
             type="text"
