@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Secret Code Chat</title>
+  <title>HiddenTalk – Secret Code Chat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -10,73 +10,108 @@
   <div class="app">
     <!-- Landing screen -->
     <section id="landing-screen" class="screen active">
-      <div class="card">
-        <h1>Secret Chat</h1>
-        <p>Share a secret code with a friend and chat anonymously.</p>
-
-        <label for="room-code-input">Enter or create a secret code</label>
-        <div class="room-input-row">
-          <input
-            id="room-code-input"
-            type="text"
-            placeholder="e.g. AYAN-123"
-            maxlength="32"
-            autocomplete="off"
-          />
-          <button id="generate-code-btn" type="button">Random</button>
+      <div class="landing-layout">
+        <div class="landing-hero">
+          <div class="logo-pill">
+            <div class="logo-dot"></div>
+            <span class="logo-text">HiddenTalk</span>
+          </div>
+          <h1>HiddenTalk</h1>
+          <p class="subtitle">
+            Share a secret code with a friend and chat in a private, anonymous room.
+          </p>
+          <ul class="feature-list">
+            <li>Endless secret rooms with simple codes.</li>
+            <li>Realtime messaging with typing indicators.</li>
+            <li>No accounts. No email. Just a shared code.</li>
+          </ul>
         </div>
 
-        <button id="join-room-btn" class="primary">Join Room</button>
+        <div class="card glass-card">
+          <h2>Start a HiddenTalk</h2>
+          <p class="card-caption">
+            Choose a secret room code and share it with the person you want to chat with.
+          </p>
 
-        <button id="copy-room-code-btn" class="secondary" type="button">
-          Copy Code
-        </button>
+          <label for="room-code-input">Secret room code</label>
+          <div class="room-input-row">
+            <input
+              id="room-code-input"
+              type="text"
+              placeholder="e.g. AYAN-123 "
+              maxlength="32"
+              autocomplete="off"
+            />
+            <button id="generate-code-btn" type="button">Random</button>
+          </div>
 
-        <p class="hint">
-          Both users must enter the same code to join the same private room.
-        </p>
+          <button id="join-room-btn" class="primary">Join Hidden Room</button>
 
-        <div class="footer">
-          <button id="toggle-theme-landing" type="button">
-            Toggle Dark Mode
+          <button id="copy-room-code-btn" class="secondary" type="button">
+            Copy Room Code
           </button>
+
+          <p class="hint">
+            Anyone who enters the same code will join the same private room.
+          </p>
+
+          <div class="footer">
+            <button id="toggle-theme-landing" type="button" class="ghost-btn">
+              Toggle Dark / Light
+            </button>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Chat screen -->
     <section id="chat-screen" class="screen">
-      <header class="chat-header">
-        <div>
-          <div class="room-label">
-            Room: <span id="current-room-code"></span>
+      <header class="chat-header glass-header">
+        <div class="chat-brand">
+          <div class="logo-pill small">
+            <div class="logo-dot"></div>
           </div>
-          <div class="status">
-            <span id="connection-status">Connecting...</span>
+          <div class="chat-brand-text">
+            <div class="brand-title">HiddenTalk</div>
+            <div class="brand-subtitle">
+              Room: <span id="current-room-code"></span>
+            </div>
           </div>
         </div>
-        <div class="header-actions">
-          <button id="toggle-theme-chat" type="button">☾</button>
-          <button id="leave-room-btn" type="button">Leave</button>
+
+        <div class="header-right">
+          <div class="status">
+            <span id="connection-status" class="status-dot">Connecting...</span>
+          </div>
+          <div class="header-actions">
+            <button id="toggle-theme-chat" type="button" class="icon-btn" title="Toggle theme">
+              ☾
+            </button>
+            <button id="leave-room-btn" type="button" class="ghost-btn">
+              Leave
+            </button>
+          </div>
         </div>
       </header>
 
       <main class="chat-main">
         <div id="messages" class="messages"></div>
         <div id="typing-indicator" class="typing-indicator hidden">
-          Someone is typing...
+          Someone is typing…
         </div>
       </main>
 
-      <footer class="chat-footer">
+      <footer class="chat-footer glass-footer">
         <form id="message-form">
           <input
             id="message-input"
             type="text"
-            placeholder="Type a message"
+            placeholder="Type a hidden message…"
             autocomplete="off"
           />
-          <button id="send-btn" type="submit">Send</button>
+          <button id="send-btn" type="submit" class="primary-icon">
+            <span>Send</span>
+          </button>
         </form>
       </footer>
     </section>
