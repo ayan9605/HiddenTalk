@@ -455,6 +455,16 @@ button:active {
   min-height: 0;               /* critical for flexbox scroll area */
 }
 
+/* Prevent double-tap zoom on chat controls */
+.messages,
+.chat-footer,
+#message-form,
+#message-input,
+#send-btn,
+#attach-btn {
+  touch-action: manipulation;
+}
+
 /* Message bubbles */
 
 .message-row {
@@ -584,6 +594,32 @@ body.light #message-input {
 #send-btn {
   min-width: 70px;
   border-radius: 999px;
+}
+
+/* Fullscreen media viewer */
+
+.media-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.media-viewer-overlay img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.media-viewer-overlay-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 1.6rem;
+  color: #ffffff;
+  cursor: pointer;
 }
 
 /* Animations */
