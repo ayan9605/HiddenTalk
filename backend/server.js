@@ -51,6 +51,50 @@ const limiter = rateLimit({
 });
 app.use(limiter); // apply to all REST routes
 
+// Simple liveness probe
+app.get('/ping', (req, res) => {
+  res.status(200).json({ pong: true });
+});
+
+// Deep health check with basic server stats
+app.get('/health', (req, res) => {
+  const dbState = mongoose.connection?.readyState ?? 0;
+  const dbStates = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting'
+  };
+
+  const memory = process.memoryUsage();
+  const health = {
+    status: 'ok',
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+    pid: process.pid,
+    nodeVersion: process.version,
+    env: process.env.NODE_ENV || 'development',
+    db: {
+      state: dbStates[dbState] || 'unknown',
+      readyState: dbState
+    },
+    memory: {
+      rss: memory.rss,
+      heapTotal: memory.heapTotal,
+      heapUsed: memory.heapUsed,
+      external: memory.external
+    }
+  };
+
+  // If DB is disconnected or disconnecting, mark as unhealthy
+  if (dbState === 0 || dbState === 3) {
+    health.status = 'unhealthy';
+    return res.status(503).json(health);
+  }
+
+  res.status(200).json(health);
+});
+
 // Static serving for uploaded media
 const uploadsPath = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsPath)) {
