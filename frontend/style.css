@@ -508,6 +508,23 @@ button:active {
   opacity: 0.8;
 }
 
+/* Media inside bubbles */
+
+.message-media {
+  display: block;
+  margin-bottom: 4px;
+  border-radius: 12px;
+  max-width: 220px;
+  max-height: 200px;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.message-media.video {
+  max-width: 260px;
+  max-height: 220px;
+}
+
 /* Typing indicator */
 
 .typing-indicator {
