@@ -56,18 +56,22 @@ body {
   background: var(--bg);
   color: var(--text);
   display: flex;
-  align-items: stretch;
-  justify-content: center;
+  flex-direction: column;    /* key: vertical stack */
+  align-items: stretch;      /* no vertical centering */
+  justify-content: flex-start;
   transition: background 0.4s ease, color 0.3s ease;
 }
 
 .app {
   flex: 1;
   max-width: 1120px;
+  width: 100%;
   display: flex;
   align-items: stretch;
   justify-content: center;
   padding: 16px;
+  margin: 0 auto;
+  min-height: 100vh;         /* key: full viewport height for app */
 }
 
 /* Screens */
@@ -327,6 +331,7 @@ button:active {
 /* Chat screen */
 
 #chat-screen {
+  display: flex;              /* key: column flex container */
   flex-direction: column;
   background: var(--bg-solid);
   border-radius: 20px;
@@ -425,7 +430,7 @@ button:active {
 /* Chat main */
 
 .chat-main {
-  flex: 1;
+  flex: 1;                     /* grows to fill */
   display: flex;
   flex-direction: column;
   background: linear-gradient(
@@ -524,6 +529,7 @@ button:active {
 
 .chat-footer {
   border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;              /* key: keep footer visible, no shrink */
 }
 
 .glass-footer {
