@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Secret Code Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Landing screen -->
+    <section id="landing-screen" class="screen active">
+      <div class="card">
+        <h1>Secret Chat</h1>
+        <p>Share a secret code with a friend and chat anonymously.</p>
+
+        <label for="room-code-input">Enter or create a secret code</label>
+        <div class="room-input-row">
+          <input
+            id="room-code-input"
+            type="text"
+            placeholder="e.g. AYAN-123"
+            maxlength="32"
+            autocomplete="off"
+          />
+          <button id="generate-code-btn" type="button">Random</button>
+        </div>
+
+        <button id="join-room-btn" class="primary">Join Room</button>
+
+        <button id="copy-room-code-btn" class="secondary" type="button">
+          Copy Code
+        </button>
+
+        <p class="hint">
+          Both users must enter the same code to join the same private room.
+        </p>
+
+        <div class="footer">
+          <button id="toggle-theme-landing" type="button">
+            Toggle Dark Mode
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chat screen -->
+    <section id="chat-screen" class="screen">
+      <header class="chat-header">
+        <div>
+          <div class="room-label">
+            Room: <span id="current-room-code"></span>
+          </div>
+          <div class="status">
+            <span id="connection-status">Connecting...</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="toggle-theme-chat" type="button">☾</button>
+          <button id="leave-room-btn" type="button">Leave</button>
+        </div>
+      </header>
+
+      <main class="chat-main">
+        <div id="messages" class="messages"></div>
+        <div id="typing-indicator" class="typing-indicator hidden">
+          Someone is typing...
+        </div>
+      </main>
+
+      <footer class="chat-footer">
+        <form id="message-form">
+          <input
+            id="message-input"
+            type="text"
+            placeholder="Type a message"
+            autocomplete="off"
+          />
+          <button id="send-btn" type="submit">Send</button>
+        </form>
+      </footer>
+    </section>
+  </div>
+
+  <audio id="message-sound" preload="auto">
+    <source
+      src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA="
+      type="audio/wav"
+    />
+  </audio>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
