@@ -28,10 +28,19 @@ router.get('/:code/messages', async (req, res) => {
 
     const limit = sanitizeLimit(req.query.limit);
 
+    // Returns both text and media messages for the room,
+    // in chronological order, up to the specified limit.
     const messages = await Message.find({ roomCode: code })
       .sort({ timestamp: 1 })
       .limit(limit)
       .lean();
+
+    // Ensure the room exists (optional: auto-create like in socket join)
+    await Room.findOneAndUpdate(
+      { code },
+      { $setOnInsert: { code, createdAt: new Date() } },
+      { upsert: true, new: true }
+    );
 
     res.json({ roomCode: code, messages });
   } catch (err) {
