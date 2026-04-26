@@ -56,10 +56,11 @@ body {
   background: var(--bg);
   color: var(--text);
   display: flex;
-  flex-direction: column;    /* key: vertical stack */
-  align-items: stretch;      /* no vertical centering */
+  flex-direction: column;    /* vertical stack */
+  align-items: stretch;
   justify-content: flex-start;
   transition: background 0.4s ease, color 0.3s ease;
+  overflow: hidden;          /* page itself doesn't scroll, only messages */
 }
 
 .app {
@@ -69,9 +70,10 @@ body {
   display: flex;
   align-items: stretch;
   justify-content: center;
-  padding: 16px;
+  padding: 0 16px;           /* horizontal padding only */
   margin: 0 auto;
-  min-height: 100vh;         /* key: full viewport height for app */
+  min-height: 100vh;
+  height: 100vh;             /* fill viewport */
 }
 
 /* Screens */
@@ -308,7 +310,7 @@ button:hover {
 }
 
 button.primary:hover {
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 16px 34px rgba(0, 245, 160, 0.45);
 }
 
 button:active {
@@ -331,13 +333,14 @@ button:active {
 /* Chat screen */
 
 #chat-screen {
-  display: flex;              /* key: column flex container */
+  display: flex;              /* column flex container */
   flex-direction: column;
   background: var(--bg-solid);
   border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--shadow-soft);
   animation: fadeInUp 0.55s ease;
+  flex: 1;                    /* fill remaining height */
 }
 
 /* Chat header */
@@ -439,6 +442,7 @@ button:active {
     #08121e 35%,
     #050910 100%
   );
+  min-height: 0;               /* allow shrink so footer stays visible */
 }
 
 .messages {
@@ -448,6 +452,7 @@ button:active {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-height: 0;               /* critical for flexbox scroll area */
 }
 
 /* Message bubbles */
@@ -546,7 +551,7 @@ button:active {
 
 .chat-footer {
   border-top: 1px solid var(--border-subtle);
-  flex-shrink: 0;              /* key: keep footer visible, no shrink */
+  flex-shrink: 0;              /* keep footer visible, no shrink */
 }
 
 .glass-footer {
@@ -633,7 +638,7 @@ body.light #message-input {
   }
 
   .app {
-    padding: 8px;
+    padding: 8px 8px 0;
   }
 
   #chat-screen {
