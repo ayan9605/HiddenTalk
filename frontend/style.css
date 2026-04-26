@@ -60,7 +60,7 @@ body {
   align-items: stretch;
   justify-content: flex-start;
   transition: background 0.4s ease, color 0.3s ease;
-  overflow: hidden;          /* page itself doesn't scroll, only messages */
+  overflow: hidden;          /* desktop: page itself doesn't scroll */
 }
 
 .app {
@@ -73,7 +73,7 @@ body {
   padding: 0 16px;           /* horizontal padding only */
   margin: 0 auto;
   min-height: 100vh;
-  height: 100vh;             /* fill viewport */
+  height: 100vh;             /* desktop: fill viewport */
 }
 
 /* Screens */
@@ -647,8 +647,15 @@ body.light #message-input {
 }
 
 @media (max-width: 600px) {
+  /* Allow whole page to scroll so type bar is reachable */
+  body {
+    overflow: auto;
+  }
+
   .app {
     padding: 0;
+    height: auto;
+    min-height: 100vh;
   }
 
   #chat-screen,
