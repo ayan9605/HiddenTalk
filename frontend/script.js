@@ -4,6 +4,9 @@ let currentRoomCode = null;
 let senderId = null;
 let typingTimeoutId = null;
 
+// Autoscroll state
+let autoScrollOnNewMessage = true;
+
 // Elements
 const landingScreen = document.getElementById('landing-screen');
 const chatScreen = document.getElementById('chat-screen');
@@ -22,6 +25,10 @@ const toggleThemeLanding = document.getElementById('toggle-theme-landing');
 const toggleThemeChat = document.getElementById('toggle-theme-chat');
 const leaveRoomBtn = document.getElementById('leave-room-btn');
 const messageSound = document.getElementById('message-sound');
+
+// Media upload elements
+const attachBtn = document.getElementById('attach-btn');
+const fileInput = document.getElementById('file-input');
 
 // Utilities
 function generateSenderId() {
@@ -53,6 +60,11 @@ function scrollToBottom() {
   });
 }
 
+// Check if user is at (or near) the bottom of the messages list
+function isAtBottom(el, threshold = 40) {
+  return el.scrollHeight - el.scrollTop - el.clientHeight <= threshold;
+}
+
 // Theme
 function setTheme(theme) {
   if (theme === 'light') {
@@ -82,10 +94,20 @@ function appendSystemMessage(text) {
   div.className = 'system-message';
   div.textContent = text;
   messagesContainer.appendChild(div);
-  scrollToBottom();
+
+  if (autoScrollOnNewMessage) {
+    scrollToBottom();
+  }
 }
 
-function appendChatMessage({ senderId: sId, message, timestamp }) {
+function appendChatMessage({
+  senderId: sId,
+  message,
+  timestamp,
+  type,
+  mediaUrl,
+  mediaType
+}) {
   const isMe = sId === senderId;
 
   const row = document.createElement('div');
@@ -94,19 +116,41 @@ function appendChatMessage({ senderId: sId, message, timestamp }) {
   const bubble = document.createElement('div');
   bubble.className = 'message-bubble';
 
-  const textSpan = document.createElement('span');
-  textSpan.textContent = message;
+  // Optional media preview
+  if (mediaUrl && mediaType) {
+    if (mediaType.startsWith('image/')) {
+      const img = document.createElement('img');
+      img.src = mediaUrl;
+      img.alt = 'Image';
+      img.className = 'message-media image';
+      bubble.appendChild(img);
+    } else if (mediaType.startsWith('video/')) {
+      const video = document.createElement('video');
+      video.src = mediaUrl;
+      video.controls = true;
+      video.className = 'message-media video';
+      bubble.appendChild(video);
+    }
+  }
+
+  const hasText = message && message.trim().length > 0;
+  if (hasText) {
+    const textSpan = document.createElement('span');
+    textSpan.textContent = message;
+    bubble.appendChild(textSpan);
+  }
 
   const meta = document.createElement('div');
   meta.className = 'message-meta';
   meta.textContent = formatTime(timestamp);
-
-  bubble.appendChild(textSpan);
   bubble.appendChild(meta);
-  row.appendChild(bubble);
 
+  row.appendChild(bubble);
   messagesContainer.appendChild(row);
-  scrollToBottom();
+
+  if (autoScrollOnNewMessage) {
+    scrollToBottom();
+  }
 
   if (!isMe && socket && socket.connected) {
     playMessageSound();
@@ -130,7 +174,7 @@ function initSocket() {
     reconnection: true,
     reconnectionAttempts: Infinity,
     reconnectionDelay: 1000
-  }); // Socket.IO automatically handles reconnection; options tune the delay and attempts.
+  }); // Socket.IO auto reconnection
 
   socket.on('connect', () => {
     updateConnectionStatus('Connected', 'connected');
@@ -200,6 +244,9 @@ function joinRoom() {
     .then((res) => res.json())
     .then((data) => {
       (data.messages || []).forEach((m) => appendChatMessage(m));
+      // After initial load, we should be at bottom
+      autoScrollOnNewMessage = true;
+      scrollToBottom();
     })
     .catch((err) => {
       console.error('Error loading messages', err);
@@ -244,6 +291,45 @@ function notifyTyping() {
     });
     typingTimeoutId = null;
   }, 600);
+}
+
+// Media upload
+async function uploadMedia(file) {
+  if (!currentRoomCode || !file) return;
+
+  const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20MB
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    alert('File too large. Max 20MB.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('senderId', senderId);
+
+  try {
+    const res = await fetch(
+      `/api/rooms/${encodeURIComponent(currentRoomCode)}/upload`,
+      {
+        method: 'POST',
+        body: formData
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error('Upload failed', err);
+      alert(err.error || 'Upload failed');
+      return;
+    }
+
+    // Server emits newMessage via Socket.IO; nothing more needed here
+  } catch (e) {
+    console.error('Upload error', e);
+    alert('Upload failed. Please try again.');
+  } finally {
+    fileInput.value = '';
+  }
 }
 
 // Event bindings
@@ -295,11 +381,31 @@ messageInput.addEventListener('input', () => {
   notifyTyping();
 });
 
+// Track scroll to control auto-scroll behavior
+messagesContainer.addEventListener('scroll', () => {
+  autoScrollOnNewMessage = isAtBottom(messagesContainer);
+});
+
 toggleThemeLanding.addEventListener('click', toggleTheme);
 toggleThemeChat.addEventListener('click', toggleTheme);
 
 leaveRoomBtn.addEventListener('click', () => {
   leaveRoom();
+});
+
+// Attach button and file input
+attachBtn.addEventListener('click', () => {
+  if (!currentRoomCode) {
+    roomCodeInput.focus();
+    return;
+  }
+  fileInput.click();
+});
+
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+  uploadMedia(file);
 });
 
 // Initial bootstrap
